@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Adding Staticman Comments | Performance Matters</title>
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Adding Staticman Comments" />
+<meta name="author" content="Travis Downs" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A blog about low-level software and hardware performance." />
+<meta property="og:description" content="A blog about low-level software and hardware performance." />
+<link rel="canonical" href="http://localhost:4000/blog/2020/02/05/now-with-comments.html" />
+<meta property="og:url" content="http://localhost:4000/blog/2020/02/05/now-with-comments.html" />
+<meta property="og:site_name" content="Performance Matters" />
+<meta property="og:image" content="http://localhost:4000/assets/now-with-comments/twitter-card.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-05T00:00:00+02:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:image" content="http://localhost:4000/assets/now-with-comments/twitter-card.png" />
+<meta property="twitter:title" content="Adding Staticman Comments" />
+<meta name="twitter:site" content="@trav_downs" />
+<meta name="twitter:creator" content="@trav_downs" />
+<script type="application/ld+json">
+{"author":{"@type":"Person","name":"Travis Downs"},"image":"http://localhost:4000/assets/now-with-comments/twitter-card.png","description":"A blog about low-level software and hardware performance.","dateModified":"2020-02-05T00:00:00+02:00","datePublished":"2020-02-05T00:00:00+02:00","headline":"Adding Staticman Comments","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/blog/2020/02/05/now-with-comments.html"},"url":"http://localhost:4000/blog/2020/02/05/now-with-comments.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Performance Matters" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Performance Matters</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Adding Staticman Comments</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2020-02-05T00:00:00+02:00" itemprop="datePublished">Feb 5, 2020
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    
+<p>I’ve added comments to my blog. You can find the existing comments, if any, and the new comment form <a href="#comment-section">at the bottom</a> of any post.</p>
+
+<p>I thought this would take a couple hours, but it actually took <strong>[REDACTED]</strong>. Estimates are hard.</p>
+
+<p>Here’s what I did.</p>
+
+<h2 id="table-of-contents">Table of Contents</h2>
+
+<ul id="markdown-toc">
+  <li><a href="#table-of-contents" id="markdown-toc-table-of-contents">Table of Contents</a></li>
+  <li><a href="#introduction" id="markdown-toc-introduction">Introduction</a></li>
+  <li><a href="#set-up-github-bot-account" id="markdown-toc-set-up-github-bot-account">Set Up GitHub Bot Account</a>    <ul>
+      <li><a href="#generate-personal-access-token" id="markdown-toc-generate-personal-access-token">Generate Personal Access Token</a></li>
+    </ul>
+  </li>
+  <li><a href="#set-up-recaptcha" id="markdown-toc-set-up-recaptcha">Set Up reCAPTCHA</a></li>
+  <li><a href="#set-up-the-blog-repository-configuration" id="markdown-toc-set-up-the-blog-repository-configuration">Set Up the Blog Repository Configuration</a>    <ul>
+      <li><a href="#configuring-staticmanyml" id="markdown-toc-configuring-staticmanyml">Configuring staticman.yml</a></li>
+      <li><a href="#configuring-_configyml" id="markdown-toc-configuring-_configyml">Configuring _config.yml</a></li>
+    </ul>
+  </li>
+  <li><a href="#set-up-the-api-bridge" id="markdown-toc-set-up-the-api-bridge">Set Up the API Bridge</a>    <ul>
+      <li><a href="#generate-an-rsa-keypair" id="markdown-toc-generate-an-rsa-keypair">Generate an RSA Keypair</a></li>
+      <li><a href="#sign-up-for-heroku" id="markdown-toc-sign-up-for-heroku">Sign Up for Heroku</a></li>
+      <li><a href="#deploy-staticman-bridge-to-heroku" id="markdown-toc-deploy-staticman-bridge-to-heroku">Deploy Staticman Bridge to Heroku</a></li>
+      <li><a href="#configure-bridge-secrets" id="markdown-toc-configure-bridge-secrets">Configure Bridge Secrets</a></li>
+    </ul>
+  </li>
+  <li><a href="#invite-and-accept-bot-to-blog-repo" id="markdown-toc-invite-and-accept-bot-to-blog-repo">Invite and Accept Bot to Blog Repo</a></li>
+  <li><a href="#integrate-comments-into-site" id="markdown-toc-integrate-comments-into-site">Integrate Comments Into Site</a>    <ul>
+      <li><a href="#markdown-part" id="markdown-toc-markdown-part">Markdown Part</a></li>
+    </ul>
+  </li>
+  <li><a href="#thanks" id="markdown-toc-thanks">Thanks</a></li>
+  <li><a href="#references" id="markdown-toc-references">References</a></li>
+</ul>
+
+<h2 id="introduction">Introduction</h2>
+
+<p>I am using <a href="https://staticman.net/">staticman</a>, created by <a href="https://github.com/eduardoboucas">Eduardo Bouças</a>, as my comments system for this static site.</p>
+
+<p>The basic flow for comment submission is as follows:</p>
+
+<ol>
+  <li>A reader submits the comment form on a blog post.</li>
+  <li>Javascript<sup id="fnref:backup"><a href="#fn:backup" class="footnote">1</a></sup> attached to the form submits it to my <em>staticman API bridge<sup id="fnref:bridge"><a href="#fn:bridge" class="footnote">2</a></sup></em> running on Heroku.</li>
+  <li>The API bridge does some validation of the request and submits a <a href="https://github.com/travisdowns/travisdowns.github.io/issues">pull request</a> to the github repo hosting my blog, consisting of a .yml file with the post content and meta data.</li>
+  <li>When I accept the pull request, it triggers a regeneration and republishing of the content (this is a GitHub pages feature), so the reply appears almost immediately<sup id="fnref:cache"><a href="#fn:cache" class="footnote">3</a></sup>.</li>
+</ol>
+
+<p>Here are the detailed steps to get this working. There are several other tutorials out there, with varying states of exhaustiveness, some of which
+I found only after writing most of this, but I’m going to add the pile anyways. There have been several changes to deploying staticman which mean that existing resources (and this one, of course) are marked by which “era” they were written in.</p>
+
+<p>The major changes are:</p>
+
+<ul>
+  <li>At one point the idea was that everyone would use the public staticman API bridge, but this proved unsustainable. A large amount of the work in setting up staticman is associated with running your own instance of the bridge.</li>
+  <li>There are three version of the staticman API: v1, v2 and v3. This guide uses v2 (although v3 is almost identical<sup id="fnref:v3"><a href="#fn:v3" class="footnote">4</a></sup>), but the v1 version is considerably different.</li>
+</ul>
+
+<h2 id="set-up-github-bot-account">Set Up GitHub Bot Account</h2>
+
+<p>You’ll want to create a GitHub <em>bot account</em> which will be the account that the API bridge uses to actually submit the pull requests to your blog repository. In principle, you can skip this step entirely and simply use your existing GitHub account, but I wouldn’t recommend it:</p>
+
+<ul>
+  <li>You’ll be generating a <em>personal access token</em> for this account, and uploading it to the cloud (Heroku) and if this somehow gets compromised, it’s better that it’s a throwaway bot account than your real account.</li>
+  <li>Having a dedicated account makes it easy to segregate work done by the bot, versus what you’ve done yourself. That is, you probably don’t want all the commits and pushes the bot does to show up on your personal account.</li>
+</ul>
+
+<p>The <em>bot account</em> is nothing special: it is just a regular personal account that you’ll only be using from the API bridge. So, open a private browser window, go to <a href="https://github.com">GitHub</a> and choose “Sign Up”. Call your bot something specific, which I’ll refer to as <em>GITHUB-BOT-NAME</em> from here forwards.</p>
+
+<h3 id="generate-personal-access-token">Generate Personal Access Token</h3>
+
+<p>Next, you’ll need to generate a GitHub <em>personal access token</em>, for your bot account. The <a href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line">GitHub doc</a> does a better job of explaining this than I can. If you just want everything to work for sure now and in the future, select every single scope when it prompts you, but if you care about security you should only need the <em>repo</em> and <em>user</em> scopes (today):</p>
+
+<p><strong>Repo scope:</strong></p>
+
+<p><img src="/assets/now-with-comments/scopes-repo.png" alt="Repo scope" /></p>
+
+<p><strong>User scope:</strong></p>
+
+<p><img src="/assets/now-with-comments/scopes-user.png" alt="User scope" /></p>
+
+<p>Copy and paste the displayed token somewhere safe: you’ll need this token in a later step where I’ll refer to it as  <em>${github_token}</em>. Once you close this page there is no way to recover the access token.</p>
+
+<h2 id="set-up-recaptcha">Set Up reCAPTCHA</h2>
+
+<p>You are going to gate comment submission being reCAPTCHA or a similar system so you don’t get destroyed by spam (even if you have moderation enabled, dealing with all the pull requests will probably be tiring).</p>
+
+<p>Go to <a href="https://developers.google.com/recaptcha">reCAPTCHA</a> and sign up if you haven’t already, and create a new site. We are going to use the “v2, Checkbox” variant (<a href="https://developers.google.com/recaptcha/docs/display">docs here</a>), although I’m interested to hear how it works out with other variants.</p>
+
+<p>You will need the reCAPTCHA <em>site key</em> and <em>secret key</em> for configuration later on.</p>
+
+<h2 id="set-up-the-blog-repository-configuration">Set Up the Blog Repository Configuration</h2>
+
+<p>You’ll need to include configuration for staticman in two separate places in your blog repository: <code class="language-plaintext highlighter-rouge">_config.yml</code> (the primary Jekyll config file) and <code class="language-plaintext highlighter-rouge">staticman.yml</code>, both at the top level of the repository.</p>
+
+<p>In general, the stuff that goes in <code class="language-plaintext highlighter-rouge">_config.yml</code> is for use within the static generation phase of your site, e.g., controlling the generation of the comment form and the associated javascipt. The stuff in <code class="language-plaintext highlighter-rouge">staticman.yml</code> isn’t used during generation, but is used dynamically by the API bridge (read directly from GitHub on each request) to configure the activities of the bridge. A few thigns are duplicated in both places.</p>
+
+<h3 id="configuring-staticmanyml">Configuring staticman.yml</h3>
+
+<p>Most of the configuration for the ABI bridge is set in <code class="language-plaintext highlighter-rouge">staticman.yml</code> which lives in the top level of your <em>blog repository</em>. This means that one API bridge can support many different blog repositories, each with their own configuration (indeed, this feature was critical for the original design of a shared ABI bridge).</p>
+
+<p><a href="https://github.com/eduardoboucas/staticman/blob/master/staticman.sample.yml">Here’s a sample file</a> from the staticman GitHub repository, but you might want to use this one (TODO link) from my repository as it is a bit more fleshed out.</p>
+
+<p>The main things you want to change are shown below.</p>
+
+<p><strong>Note:</strong> The <code class="language-plaintext highlighter-rouge">reCaptcha.secret</code> property is an <a href="https://staticman.net/docs/encryption"><em>encrypted</em></a> version of the <em>site secret</em> you get from the reCAPTCHA admin console. Copy the secret from the admin console, and paste it at the end of the following URL in your browser:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://${bridge_app_name}.herokuapp.com/v2/encrypt/{$recaptcha-site-secret}
+</code></pre></div></div>
+
+<p>You should get a blob of characters as a result (considerably longer than the original secret) – it is <em>this</em> value that you need to include as <code class="language-plaintext highlighter-rouge">reCaptcha.secret</code> in the configuration below (and again in <code class="language-plaintext highlighter-rouge">_config.yml</code>).</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="c1"># all of these fields are nested under the comments key, which corresponds to the final element</span>
+<span class="c1"># of the API bridge enpoint, i.e., you can different configurations even within the same staticman.yml</span>
+<span class="c1"># file all under different keys</span>
+<span class="na">comments</span><span class="pi">:</span>
+
+  <span class="c1"># There are many more required config values here, not shown: </span>
+  <span class="c1"># use the file linked above as a template</span>
+
+  <span class="c1"># I guess used only for email notifications?</span>
+  <span class="na">name</span><span class="pi">:</span> <span class="s2">"</span><span class="s">Performance</span><span class="nv"> </span><span class="s">Matters</span><span class="nv"> </span><span class="s">Blog"</span>
+
+  <span class="c1"># You may want a different set of "required fields". Staticman will</span>
+  <span class="c1"># reject posts without all of these fields</span>
+  <span class="na">requiredFields</span><span class="pi">:</span> <span class="pi">[</span><span class="s2">"</span><span class="s">name"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">email"</span><span class="pi">,</span> <span class="s2">"</span><span class="s">message"</span><span class="pi">]</span>
+
+  <span class="c1"># you are going to want reCaptcha set up</span>
+  <span class="na">reCaptcha</span><span class="pi">:</span>
+    <span class="na">enabled</span><span class="pi">:</span> <span class="no">true</span>
+    <span class="na">siteKey</span><span class="pi">:</span> <span class="s">6LcWstQUAAAAALoGBcmKsgCFbMQqkiGiEt361nK1</span>
+    <span class="na">secret</span><span class="pi">:</span> <span class="s">a big encrypted secret (see Note above)</span>
+
+
+</code></pre></div></div>
+
+<h3 id="configuring-_configyml">Configuring _config.yml</h3>
+
+<p>The remainder of the configuration goes in <code class="language-plaintext highlighter-rouge">_config.yml</code>. Here’s the configuration I had to add:</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># The URL for the staticman API bridge endpoint</span>
+<span class="c1"># You will want to modify some of the values:</span>
+<span class="c1">#  ${github-username}: the username of the account with which you publish your blog</span>
+<span class="c1">#  ${blog-repo}: the name of your blog repository in github</span>
+<span class="c1">#  master: this the branch out of which your blog is published, often master or gh-pages</span>
+<span class="c1">#  ${bridge_app_name}: the name you chose in Heroku for your bridge API</span>
+<span class="c1">#  comments: the so-called property, this defines the key in staticman.yml where the configuration is found</span>
+<span class="c1">#</span>
+<span class="c1"># for me, this line reads:</span>
+<span class="c1"># https://staticman-travisdownsio.herokuapp.com/v2/entry/travisdowns/travisdowns.github.io/master/comments</span>
+<span class="na">staticman_url</span><span class="pi">:</span> <span class="s">https://${bridge_app_name}.herokuapp.com/v2/entry/${github-username}/${blog-repo}/master/comments</span>
+
+<span class="c1"># reCaptcha configuration info: the exact same site key and *encrypted* secret that you used in staticman.yml</span>
+<span class="c1"># I personally don't think the secret needs to be included in the generated site, but the staticman API bridge uses</span>
+<span class="c1"># it to ensure the site configuration and bridge configuration match (but why not just compare the site key?)</span>
+<span class="na">reCaptcha</span><span class="pi">:</span>
+  <span class="na">siteKey</span><span class="pi">:</span> <span class="s">6LcWstQUAAAAALoGBcmKsgCFbMQqkiGiEt361nK1</span>
+  <span class="na">secret</span><span class="pi">:</span> <span class="s">exactly the same secret as the staticman.yml file</span>
+</code></pre></div></div>
+
+<h2 id="set-up-the-api-bridge">Set Up the API Bridge</h2>
+
+<p>This section covers deploying a private instances of the API bridge to Heroku.</p>
+
+<h3 id="generate-an-rsa-keypair">Generate an RSA Keypair</h3>
+
+<p>This keypair will be used to encrypt secrets that will be stored in public places, such as your reCAPTCHA site secret. The sececrets will be encrypted with the public half of the keypair, and decriped in the Bridge API server with the private part.</p>
+
+<p>Use the following on your local to generate to generate the pair:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen -m PEM -t rsa -b 4096 -C "staticman key" -f ~/.ssh/staticman_key
+</code></pre></div></div>
+
+<p>Don’t use any passphrase<sup id="fnref:pass"><a href="#fn:pass" class="footnote">5</a></sup>. You can change the <code class="language-plaintext highlighter-rouge">-f</code> argument if you want to save the key somewhere else, in which case you’ll have to use the new location when setting up the Heroku config below.</p>
+
+<p>You can verify the key was genreated by running:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>head -2 ~/.ssh/staticman_key
+</code></pre></div></div>
+
+<p>Which should output something like:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-----BEGIN RSA PRIVATE KEY-----
+MIIJKAIBAAKCAgEAud7+fPWXzuxCoyyGbQTYCGi9C1N984roI/Tr7yJi074F+Cfp
+</code></pre></div></div>
+
+<p>Your second line will vary of course, but the first line must be <code class="language-plaintext highlighter-rouge">-----BEGIN RSA PRIVATE KEY-----</code>. If you see something else, perhaps mentioning <code class="language-plaintext highlighter-rouge">OPENSSH PRIVATE KEY</code>, it won’t work.</p>
+
+<h3 id="sign-up-for-heroku">Sign Up for Heroku</h3>
+
+<p>The original idea of staticman was to have a public API bridge that everyone uses for free. However, in practice this hasn’t proved sustainable as whatever free tier the thing was running on tends to hit its limits and then the fun stops. So the current recommendation is to set up a free instance of the API bridge on Heroku. So let’s do that.</p>
+
+<p><a href="https://signup.heroku.com/">Sign up</a> for a free account on Heroku. No credit card is required and a free account should give you enough juice for at least 1,000 comments a month<sup id="fnref:juice"><a href="#fn:juice" class="footnote">6</a></sup>.</p>
+
+<h3 id="deploy-staticman-bridge-to-heroku">Deploy Staticman Bridge to Heroku</h3>
+
+<p>The easiest way to do this is simply to click the <em>Deploy to Heroku</em> button in the <a href="https://github.com/eduardoboucas/staticman">README on the staticman repo</a>:</p>
+
+<p><img src="/assets/now-with-comments/deploy.png" alt="Deploy" width="50%" /></p>
+
+<p>You’ll probably see some building stuff (TODO: try this).</p>
+
+<h3 id="configure-bridge-secrets">Configure Bridge Secrets</h3>
+
+<p>The bridge needs a couple of secrets to do its job:</p>
+
+<ul>
+  <li>The <em>GitHub personal access token</em> of your bot account. This lets it do work on behalf of your bot account (in particular, submit pull requests to your blog repository).</li>
+  <li>The private key of the keypair you generated earlier.</li>
+</ul>
+
+<p>If you want, you can add both of these through the Heroku web dashboard: go to Settings -&gt; Reveal Config Vars, and enter them <a href="/assets/now-with-comments/config-vars.png">like this</a>).</p>
+
+<p>However, you might as well get familiar with the Heroku command line, because it’s pretty cool and allows you to complete this flow without having your GitHub token flow through your clipboard and makes it easy to remove the newline characters in the private key.</p>
+
+<p>Follow <a href="https://devcenter.heroku.com/articles/heroku-cli">the instructions</a> to install and login to the Heroku CLI, then issue the following commands from any directory (note that <code class="language-plaintext highlighter-rouge">${github_token}</code> is the <em>personal access token</em> you generated earlier: copy and paste it into the command):</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku config:add <span class="nt">--app</span> <span class="k">${</span><span class="nv">bridge_app_name</span><span class="k">}</span> <span class="s2">"RSA_PRIVATE_KEY=</span><span class="si">$(</span><span class="nb">cat</span> ~/.ssh/staticman_key | <span class="nb">tr</span> <span class="nt">-d</span> <span class="s1">'\n'</span><span class="si">)</span><span class="s2">"</span>
+heroku config:add <span class="nt">--app</span> <span class="k">${</span><span class="nv">bridge_app_name</span><span class="k">}</span> <span class="s2">"GITHUB_TOKEN=</span><span class="k">${</span><span class="nv">github_token</span><span class="k">}</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>Here, the <code class="language-plaintext highlighter-rouge">tr -d '\n'</code> part of the pipeline is removing the newlines from the private key, since Heroku config variables can’t handle them and/or the API bridge can’t handle them.</p>
+
+<p>You can check that the config was correctly set by outputting it as follows:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>heroku config <span class="nt">--app</span> <span class="k">${</span><span class="nv">bridge_app_name</span><span class="k">}</span>
+</code></pre></div></div>
+
+<h2 id="invite-and-accept-bot-to-blog-repo">Invite and Accept Bot to Blog Repo</h2>
+
+<p>Finally, you need to invite your GitHub <em>bot account</em> that you created earlier to your blog repository<sup id="fnref:whycollab"><a href="#fn:whycollab" class="footnote">7</a></sup> and accept the invite.</p>
+
+<p>Open your blog repository, go to <em>Settings -&gt; Collaborators</em> and search for and add the GitHub bot account that you created earlier as a collaborator:</p>
+
+<p><img src="/assets/now-with-comments/add-collab.png" alt="Adding Collaborators" /></p>
+
+<p>Next, accept<sup id="fnref:invite"><a href="#fn:invite" class="footnote">8</a></sup> the invitation using the bridge API, by going to the following URL:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>https://${bridge_app_name}.herokuapp.com/v2/connect/${github-username}/${blog-repo}
+</code></pre></div></div>
+
+<p>You should see <code class="language-plaintext highlighter-rouge">OK!</code> as the output if it worked: this only appears <em>once</em> when the invitation got accepted, at all other times it will show <code class="language-plaintext highlighter-rouge">Invitation not found</code>.</p>
+
+<h2 id="integrate-comments-into-site">Integrate Comments Into Site</h2>
+
+<p>Finally, you need to integrate code to display the existing comments and submit new comments.</p>
+
+<p>I used a mash up of commenting code from the <a href="https://spinningnumbers.org">spinningnumbers.org</a> blog as well as the staticman integration in the <a href="https://mmistakes.github.io/minimal-mistakes/docs/configuration/#static-based-comments-via-staticman">minimal mistakes theme</a>. The advantage the former has over the latter is that the comments allow one level of nesting (replies to top-level comments are nested beneath it).</p>
+
+<p>I planed to extract the associated markdown, liquid and JavaScript code to a separate repository as a single point where people could collaborate on this part of the integration, but man I’ve already spent way to long on this. I may still do it, but for now here’s how I did the integration.</p>
+
+<h3 id="markdown-part">Markdown Part</h3>
+
+<p>The key thing you need to do is include a blob of HTML and associated JavaScript in any page where you want to display and accept comments. I do this as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{% if page.comments == true %}
+  {% include comments.html %}
+{% endif %}
+</code></pre></div></div>
+
+<p>You can paste it into any post, or better add it to the <code class="language-plaintext highlighter-rouge">footer.html</code> include or something like that (details depend on your theme). The invariant is that wherever this appears, the existing comments appear, followed by a form to submit new comments. You can see the <a href="https://github.com/travisdowns/blog-test/blob/master/_includes/comments.html"><code class="language-plaintext highlighter-rouge">comments.html</code> include here</a> – in turn, it includes <code class="language-plaintext highlighter-rouge">comment.html</code> (once per comment, generates the comment html) and <code class="language-plaintext highlighter-rouge">comment_form.html</code> which generates the new comment form.</p>
+
+<p>This ultimately includes <a href="https://github.com/travisdowns/blog-test/blob/master/_includes/comments.html#L35">external JavaScript</a> for JQuery and reCAPTCHA, as well as <a href="https://github.com/travisdowns/blog-test/blob/master/assets/main.js">main.js</a> which includes the JavaScript to implement the replies (moving the form when the “reply to” button is clicked, and submitting the form via AJAX to the API bridge).</p>
+
+<p>So to use this integration in your <code class="language-plaintext highlighter-rouge">Jekyll</code> blow you need to:</p>
+
+<ul>
+  <li>Copy the <code class="language-plaintext highlighter-rouge">_includes/comment.html</code>, <code class="language-plaintext highlighter-rouge">_includes/comments.html</code>, <code class="language-plaintext highlighter-rouge">_includes/comment_form.html</code>, <code class="language-plaintext highlighter-rouge">assets/main.js</code>, and <code class="language-plaintext highlighter-rouge">_sass/comment-styles.css</code> files to your blog repository.</li>
+  <li>Include <code class="language-plaintext highlighter-rouge">@import "comment-styles";</code> in your <code class="language-plaintext highlighter-rouge">assets/main.scss</code> file. If you don’t have one, you’ll need to create it following the rules for your theme. Usually this just means a <code class="language-plaintext highlighter-rouge">main.scss</code> with empty front-matter and an <code class="language-plaintext highlighter-rouge">@import "your-theme";</code> line to import the theme SCSS. Alternately, you could avoid putting anything in <code class="language-plaintext highlighter-rouge">main.scss</code> and just include the comment styles as a separate file, but this adds another request to each post.</li>
+  <li>Do the <code class="language-plaintext highlighter-rouge">include comments.html</code> thing shown above in an appropriate place in your template/theme.</li>
+  <li>Set <code class="language-plaintext highlighter-rouge">comments: true</code> in the front matter of posts you want to have comments (or set it as a default in <code class="language-plaintext highlighter-rouge">_config.yml</code>).</li>
+</ul>
+
+<h2 id="thanks">Thanks</h2>
+
+<p>Thanks to Eduardo Boucas for creating staticman.</p>
+
+<p>Thanks to <a href="https://spinningnumbers.org/">Willy McAllister</a> for nested comment display work I unabashedly cribbed, and helping me sort out an RSA key genreation problem.</p>
+
+<h2 id="references">References</h2>
+
+<p>Things that were handy references while getting this working.</p>
+
+<p>This comment on <a href="https://github.com/eduardoboucas/staticman/issues/318#issuecomment-552755165">GitHub issue #318</a> was the list that I more or less follwed (I didn’t use the dev branch though).</p>
+
+<p>Willy McAllister describes setting up staticman <a href="https://spinningnumbers.org/a/staticman.html">in this post</a> – his implemented of nested comments forms the basis the one I used.</p>
+
+<p>Another [list of steps])https://gist.github.com/jannispaul/3787603317fc9bbb96e99c51fe169731) to get staticman working and some troubleshooting.</p>
+
+<p>Michael Rose, the author of minimal mistakes Jekyll theme <a href="https://mademistakes.com/articles/improving-jekyll-static-comments/">describes setting up nested staticman comments</a> – I cribbed some stuff from here such as the submitting spinner.</p>
+
+<hr />
+<p><br /></p>
+<div class="footnotes">
+  <ol>
+    <li id="fn:backup">
+      <p>If javascript is disabled, a regular POST action takes over. <a href="#fnref:backup" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:bridge">
+      <p>I don’t think you’ll find this <em>bridge</em> term in the official documentation, but I’m going to use it here. <a href="#fnref:bridge" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:cache">
+      <p>Well, subject to whatever edge caching GitHub pages is using – btw you can bust the cache by appending any random query parameter to the page: <code class="language-plaintext highlighter-rouge">...post.html?foo=1234</code>. <a href="#fnref:cache" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:v3">
+      <p>v3 mostly just extends to the URL format for the <code class="language-plaintext highlighter-rouge">/event</code> endpoint to include the hosting provider (either GitHub or GitLab), allowing the use of GitHub in addition to GitLab. Almost everything in this guide would remain unchanged. <a href="#fnref:v3" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:pass">
+      <p>You could use a passphrase, but then you’ll have to change the <code class="language-plaintext highlighter-rouge">cat</code> used below to echo the key into the Heroku config. If you want to be super safe, best is to generate the key to a transient location like ramfs and then simply delete the private portion after you’ve uploaded it to the Heroku config. <a href="#fnref:pass" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:juice">
+      <p>In particular, the <em>unverified</em> (no credit card) free tier gives you 550 hours of uptime a month, and since the <em>dyno</em> (heroku speak for their on-demand host) sleeps after 30 minutes, I figure you can handle 550/0.5 = 1100 sparsely submitted comments. Of course, if comments come in bursts, you could handle much more than that, since you’ve already “paid” for the 30 minute uptime. <a href="#fnref:juice" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:whycollab">
+      <p>The bot needs to be a collaborator to, at a minimum, commit comments to the repository, and to delete branches (using the delete branches webhook which cleans up comment related branches). However, it is possible to not use either of these features if you have moderation enabled (in which case comments arrive as a PR, which doesn’t require any particular permissions), and aren’t using the webhook. So maybe you could do without the collaborator status in that case? I haven’t tested it. <a href="#fnref:whycollab" class="reversefootnote">&#8617;</a></p>
+    </li>
+    <li id="fn:invite">
+      <p>I guess you can also just accept the invitation by opening the email sent to you by github and following the link there. This workflow involving the <code class="language-plaintext highlighter-rouge">v2/connect</code> endpoint probably made more sense when the API was meant to be shared among many uses using a common github bot account. <a href="#fnref:invite" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div><!-- travis override -->
+  
+    <section class="comments" id="comment-section">
+  <hr>
+  
+  <!-- Existing comments -->
+  <div class="comments__existing">
+    <h2>Comments</h2>
+    
+    
+    <!-- List main comments in reverse date order, newest first. List replies in date order, oldest first. -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <article id="comment-1"
+  class="js-comment comment  "
+  uid="806fde90-62b1-11ea-bce5-a5d702498d46">
+
+  <div class="comment__author">
+    fdsfsdfsd,
+    <span class="comment__date">
+      
+        
+          <a href="#comment-1" title="Permalink to this comment">
+        
+        10 March 2020
+        
+        </a>
+      
+    </span>
+  </div>
+
+  <div class="comment__body">
+    <p>fsdfsdf</p>
+
+  </div>
+
+  
+    <div class="comment__meta">
+      <a rel="nofollow" class="comment__reply-link" onclick="return addComment.moveForm('comment-1', '1', 'respond', 'now-with-comments', '806fde90-62b1-11ea-bce5-a5d702498d46')">↪&#xFE0E; Reply to fdsfsdfsd</a>
+    </div>
+  
+</article>
+
+
+
+
+
+
+
+  <hr style="border-top: 1px solid #ccc; background: transparent; margin-bottom: 10px;">
+
+
+    
+  </div>
+  
+
+  <!-- New comment form -->
+  <div id="respond" class="comment__new">
+    <form class="js-form form" method="post" action="https://anasbasem.herokuapp.com/v2/entry/basemwahba/travis/master/comments">
+  <input type="hidden" name="options[origin]" value="http://localhost:4000/blog/2020/02/05/now-with-comments.html">
+  <input type="hidden" name="options[parent]" value="http://localhost:4000/blog/2020/02/05/now-with-comments.html">
+  <input type="hidden" id="comment-replying-to" name="fields[replying_to]" value="">
+  <input type="hidden" id="comment-replying-to-uid" name="fields[replying_to_uid]" value="">
+  <input type="hidden" name="options[slug]" value="now-with-comments">
+  <input type="hidden" name="options[reCaptcha][siteKey]" value="6Lc_JOAUAAAAAKJbpIVumbpgj1q0I86C-E5KzqBR">
+  <input type="hidden" name="options[reCaptcha][secret]"  value="WMc592PoF6eC4WJjDCTGyzGIal3H41ha1epdVOmfT6m1X6zdagnsh/yQpJFgsr9IgUraucZay+aDkWQrqTSDnnl0RxIV0XBQu5oamMvJ4PA5mU9P9g7v7H7Ko/uXVG66ujylgBjiMKdy7ImcNKweh7S4X1x9613QW9pZFvrvCMoE84OtB0W/WuAMhOMlrvM/faZHak6I11nVZtbKddaCP7dgUbaF0xmQOtIr91xiLpfA74Dw5nZbmoNQ4rJWqy5QWeR2ZexfmEs3jhS58C3JiAK4Vpv0FgEdPpB6CO4sC9xVJrm1qYLuPyiubfHM0k8Rc81ZfzGLNrowpCAlMRJNqA==">
+
+  <fieldset>
+  <div class="textfield">
+    <label for="comment-form-message"><h2>Add Comment<small><a rel="nofollow" id="cancel-comment-reply-link" href="http://localhost:4000/blog/2020/02/05/now-with-comments.html#respond" style="display:none;">(cancel reply)</a></small></h2>
+      <textarea class="textfield__input" name="fields[message]" type="text" id="comment-form-message" placeholder="Your comment (markdown accepted)"></textarea>
+    </label>
+  </div>
+  </fieldset>
+
+  <fieldset>
+    <div class="textfield">
+      <label for="comment-form-name">Name
+        <input class="textfield__input" name="fields[name]" type="text" id="comment-form-name" placeholder="Your name (required)"/>
+      </label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <div class="textfield">
+      <label for="comment-form-email">E-mail
+        <input class="textfield__input" name="fields[email]" type="email" id="comment-form-email" placeholder="Your email (optional)"/>
+      </label>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <div class="textfield hp">
+      <label for="hp">
+        <input class="textfield__input" name="fields[hp]" id="hp" type="text" placeholder="Leave blank">
+      </label>
+    </div>
+  </fieldset>
+	
+  <fieldset>
+    <div id="reCaptcha" class="g-recaptcha" data-sitekey="6Lc_JOAUAAAAAKJbpIVumbpgj1q0I86C-E5KzqBR"></div>
+  </fieldset>
+	
+  <fieldset>
+    <button class="button" id="comment-form-submit">
+      Submit
+    </button>
+  </fieldset>
+
+</form>
+
+<article class="modal mdl-card mdl-shadow--2dp">
+  <div>
+    <h3 class="modal-title js-modal-title"></h3>
+  </div>
+  <div class="mdl-card__supporting-text js-modal-text"></div>
+  <div class="mdl-card__actions mdl-card--border">
+    <button class="button mdl-button--colored mdl-js-button mdl-js-ripple-effect js-close-modal">Close</button>
+  </div>
+</article>
+
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="display:none" >
+  <symbol id="icon-loading" viewBox="149.8 37.8 499.818 525"><path d="M557.8 187.8c13.8 0 24.601-10.8 24.601-24.6S571.6 138.6 557.8 138.6s-24.6 10.8-24.6 24.6c0 13.2 10.8 24.6 24.6 24.6zm61.2 90.6c-16.8 0-30.6 13.8-30.6 30.6s13.8 30.6 30.6 30.6 30.6-13.8 30.6-30.6c.6-16.8-13.2-30.6-30.6-30.6zm-61.2 145.2c-20.399 0-36.6 16.2-36.6 36.601 0 20.399 16.2 36.6 36.6 36.6 20.4 0 36.601-16.2 36.601-36.6C595 439.8 578.2 423.6 557.8 423.6zM409 476.4c-24 0-43.2 19.199-43.2 43.199s19.2 43.2 43.2 43.2 43.2-19.2 43.2-43.2S433 476.4 409 476.4zM260.8 411c-27 0-49.2 22.2-49.2 49.2s22.2 49.2 49.2 49.2 49.2-22.2 49.2-49.2-22.2-49.2-49.2-49.2zm-10.2-102c0-27.6-22.8-50.4-50.4-50.4-27.6 0-50.4 22.8-50.4 50.4 0 27.6 22.8 50.4 50.4 50.4 27.6 0 50.4-22.2 50.4-50.4zm10.2-199.8c-30 0-54 24-54 54s24 54 54 54 54-24 54-54-24.6-54-54-54zM409 37.8c-35.4 0-63.6 28.8-63.6 63.6S374.2 165 409 165s63.6-28.8 63.6-63.6-28.2-63.6-63.6-63.6z"/>
+  </symbol>
+</svg>
+
+
+
+  </div>
+</section>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="/assets/main.js"></script>
+<script src="https://www.google.com/recaptcha/api.js"></script>
+
+  
+
+  <a class="u-url" href="/blog/2020/02/05/now-with-comments.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Performance Matters</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Travis Downs</li><li><a class="u-email" href="mailto:travis.downs@gmail.com">travis.downs@gmail.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://github.com/travisdowns"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">travisdowns</span></a></li><li><a href="https://www.twitter.com/trav_downs"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#twitter"></use></svg> <span class="username">trav_downs</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>A blog about low-level software and hardware performance.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
